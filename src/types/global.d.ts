@@ -1,4 +1,6 @@
 declare interface AuthConfig {
-  client_email: string
-  private_key: string
+  clientEmail: string
+  privateKey: string
 }
+
+declare type AuthAccessToken = string

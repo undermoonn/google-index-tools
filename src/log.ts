@@ -1,8 +1,5 @@
-import fs from 'node:fs'
-import path from 'node:path'
-import { ref } from 'vue'
-import { app } from '@electron/remote'
 import { createLogger, transports, format, Logform } from 'winston'
+import { message } from './message'
 
 interface LogLine extends Logform.TransformableInfo {
   timestamp: string
@@ -14,41 +11,34 @@ export enum Level {
   error = 'error'
 }
 
-function getLogFilePath() {
-  return path.resolve(app.getPath('temp'), './google-index-tool.log')
-}
-
-if (!fs.existsSync(getLogFilePath())) {
-  fs.writeFileSync(getLogFilePath(), '', 'utf-8')
-}
-
-export const Log = createLogger({
+const _Log = createLogger({
   format: format.combine(format.timestamp(), format.json()),
-  transports: [
-    new transports.File({ filename: getLogFilePath() }),
-    new transports.Console()
-  ]
+  /** TODO: transport IndexedDB  */
+  transports: [new transports.Console()]
 })
 
-export const logMemory = ref<LogLine[]>(getLogMemory())
+type LogMessage = unknown
 
-function getLogMemory() {
-  const log = fs.readFileSync(getLogFilePath(), 'utf-8')
-  return log
-    .split('\n')
-    .filter(item => item.trim())
-    .map(item => {
-      return JSON.parse(`${item}`)
-    })
-    .reverse()
+function convertLogMessage(mes: LogMessage): string {
+  // TODO:
+  return String(mes)
 }
 
-fs.watchFile(
-  getLogFilePath(),
-  {
-    interval: 1000
-  },
-  () => {
-    logMemory.value = getLogMemory()
-  }
-)
+const info = (mes: LogMessage) => {
+  _Log.info(convertLogMessage(mes))
+}
+
+const warn = (mes: LogMessage) => {
+  _Log.warn(convertLogMessage(mes))
+}
+
+const error = (mes: LogMessage) => {
+  message.error(convertLogMessage(mes))
+  _Log.error(convertLogMessage(mes))
+}
+
+export const Log = {
+  info,
+  warn,
+  error
+}
