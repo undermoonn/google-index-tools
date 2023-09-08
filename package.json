@@ -1,9 +1,17 @@
 {
   "name": "google-index-tools",
-  "version": "1.0.0",
+  "version": "1.0.0-alpha.1",
   "main": "dist/main/index.js",
   "private": true,
   "productName": "Google Index Tools",
+  "keywords": [
+    "indexing-api",
+    "google",
+    "electron",
+    "vite",
+    "vue3",
+    "vue"
+  ],
   "debug": {
     "env": {
       "VITE_DEV_SERVER_URL": "http://127.0.0.1:3344/"
@@ -22,6 +30,7 @@
     "electron-builder": "^24.6.4",
     "naive-ui": "^2.34.4",
     "prettier": "^3.0.3",
+    "rimraf": "^5.0.1",
     "unocss": "^0.55.7",
     "vite": "^4.4.9",
     "vite-plugin-electron": "^0.14.0",

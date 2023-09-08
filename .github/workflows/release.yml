@@ -1,15 +1,15 @@
-# Workflow's name
 name: Build Electron App
 
-# Workflow's trigger
 on:
   push:
     tags:
       - 'v*.*.*'
+      - 'v*.*.*-alpha.*'
 
-# Workflow's jobs
+permissions:
+  contents: write
+
 jobs:
-  # job's id
   release:
     name: build & release
 
@@ -18,44 +18,46 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        os: [macos-10.15]
+        os: [macos-latest]
 
     steps:
-      - name: Check out git repository
-        uses: actions/checkout@v2
+      - name: check out git repository
+        uses: actions/checkout@v4
 
       - name: Setup NodeJs
         uses: actions/setup-node@v3
         with:
           node-version: 18
 
-      - name: Setup pnpm
+      - name: setup pnpm
         uses: pnpm/action-setup@v2.4.0
         with:
-          version: 8
+          version: 7
           run_install: true
 
       # - name: build windows app
-      #   if: matrix.os == 'windows-2019'
+      #   if: matrix.os == 'windows-latest'
       #   run: |
       #     npm run electron:build-win
       #   env:
-      #     GH_TOKEN:
+      #     GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
       - name: build mac app
-        if: matrix.os == 'macos-10.15'
+        if: matrix.os == 'macos-latest'
         run: |
           pnpm run build
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
       # - name: cleanup artifacts for windows
-      #   if: matrix.os == 'windows-2019'
+      #   if: matrix.os == 'windows-latest'
       #   run: |
       #     npx rimraf "release/!(*.exe)"
 
-      - name: cleanup artifacts for macosZ
-        if: matrix.os == 'macos-10.15'
+      - name: cleanup artifacts for macos
+        if: matrix.os == 'macos-latest'
         run: |
-          npx rimraf "release/!(*.dmg)"
+          find release -type f -not -name '*.dmg' -delete
 
       - name: upload artifacts
         uses: actions/upload-artifact@v2
@@ -67,6 +69,6 @@ jobs:
         uses: softprops/action-gh-release@v1
         if: startsWith(github.ref, 'refs/tags/')
         with:
-          files: 'release/**'
+          files: 'release/**/*.dmg'
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
