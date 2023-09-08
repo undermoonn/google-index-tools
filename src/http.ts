@@ -20,7 +20,7 @@ const onResponse: ReqOpts['onResponse'] = ctx => {
 
 const onResponseError: ReqOpts['onResponseError'] = ctx => {
   const { options, request, response, error } = ctx
-  Log.error(error)
+  Log.error(response._data || error)
 }
 
 const baseOpts: ReqOpts = {

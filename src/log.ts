@@ -20,7 +20,9 @@ const _Log = createLogger({
 type LogMessage = unknown
 
 function convertLogMessage(mes: LogMessage): string {
-  // TODO:
+  try {
+    return JSON.stringify(mes)
+  } catch (e) {}
   return String(mes)
 }
 

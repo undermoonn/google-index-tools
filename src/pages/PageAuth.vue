@@ -5,6 +5,7 @@ import { DocumentOutline } from '@vicons/ionicons5'
 import {
   NIcon,
   NForm,
+  NSpin,
   NInput,
   NButton,
   NUpload,
@@ -25,11 +26,13 @@ const authLoading = ref(false)
 checkAuth()
 
 function checkAuth() {
+  authLoading.value = true
   if (authStore.authAccessToken) {
     authStore.authStatus = AuthStatus.Success
     router.push({ name: RN.PageIndexing })
     return true
   }
+  authLoading.value = false
   return false
 }
 
@@ -38,8 +41,9 @@ async function auth() {
   try {
     await authStore.auth()
     checkAuth()
-  } catch (_) {}
-  authLoading.value = false
+  } catch (_) {
+    authLoading.value = false
+  }
 }
 
 function handleUploadChange(data: { fileList: UploadFileInfo[] }) {
@@ -65,7 +69,9 @@ function handleUploadChange(data: { fileList: UploadFileInfo[] }) {
 </script>
 
 <template>
+  <NSpin v-if="authLoading" flex-1 stroke="#ddd" />
   <div
+    v-else
     class="page-auth"
     flex
     flex-col

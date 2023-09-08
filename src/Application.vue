@@ -1,20 +1,25 @@
 <script lang="ts" setup>
 import { RouterView, useRoute } from 'vue-router'
 import {
-  NConfigProvider,
-  NMessageProvider,
+  NIcon,
   NBreadcrumb,
+  NConfigProvider,
   NBreadcrumbItem,
-  NIcon
+  NMessageProvider
 } from 'naive-ui'
 import { LogoGoogle } from '@vicons/ionicons5'
+import hljs from 'highlight.js/lib/core'
+import json from 'highlight.js/lib/languages/json'
+
 import HackSetMessage from './components/hack/HackSetMessage'
+
+hljs.registerLanguage('json', json)
 
 const route = useRoute()
 </script>
 
 <template>
-  <NConfigProvider h-full flex flex-col>
+  <NConfigProvider h-full flex flex-col :hljs="hljs">
     <NMessageProvider>
       <HackSetMessage />
     </NMessageProvider>
@@ -31,7 +36,11 @@ const route = useRoute()
         </NBreadcrumbItem>
       </NBreadcrumb>
     </div>
-    <RouterView p-6 />
+    <RouterView v-slot="{ Component }" p-6>
+      <Transition>
+        <component :is="Component" />
+      </Transition>
+    </RouterView>
   </NConfigProvider>
 </template>
 
