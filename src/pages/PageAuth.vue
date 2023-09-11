@@ -1,5 +1,6 @@
 <script lang="ts" setup>
 import { ref } from 'vue'
+import { useI18n } from 'vue-i18n'
 import { useRouter } from 'vue-router'
 import { CodeSlashSharp } from '@vicons/ionicons5'
 import {
@@ -19,6 +20,7 @@ import { RN } from '../router'
 import { useAuthStore, AuthStatus } from '../store/auth'
 import { message } from '../message'
 
+const { t } = useI18n()
 const router = useRouter()
 const authStore = useAuthStore()
 const authLoading = ref(false)
@@ -108,7 +110,7 @@ function handleUploadChange(data: { fileList: UploadFileInfo[] }) {
               <CodeSlashSharp />
             </NIcon>
           </div>
-          <span op-50>Load JSON Auth File</span>
+          <span op-50>{{ t('page_auth_load_file') }}</span>
         </NUploadDragger>
       </NUpload>
     </div>
@@ -121,7 +123,7 @@ function handleUploadChange(data: { fileList: UploadFileInfo[] }) {
       :loading="authLoading"
       strong
       type="primary"
-      >AUTHORIZE</NButton
+      >{{ t('page_auth_button') }}</NButton
     >
   </div>
 </template>

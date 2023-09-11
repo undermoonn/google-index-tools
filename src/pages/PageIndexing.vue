@@ -7,11 +7,13 @@ import {
   postUpdateIndexing
 } from '../api/indexing'
 import { computed, ref } from 'vue'
+import { useI18n } from 'vue-i18n'
 import { useAuthStore } from '../store/auth'
 import { message } from '../message'
 import VueJsonPretty from 'vue-json-pretty'
 import 'vue-json-pretty/lib/styles.css'
 
+const { t } = useI18n()
 const dialog = useDialog()
 const loading = ref(false)
 const authStore = useAuthStore()
@@ -69,13 +71,11 @@ async function confirmDel() {
     content() {
       return (
         <div>
-          <div>
-            Please type
-            <span class={'font-mono py-1 px-2 mx-2 rounded bg-black bg-op-10'}>
-              {url.value}
-            </span>
-            to confirm.
-          </div>
+          <div
+            innerHTML={t('page_indexing_del_confirm_title', {
+              url: `<span class="font-mono py-1 px-2 mx-2 rounded bg-black bg-op-10">${url.value}</span>`
+            })}
+          />
           <NInput
             value={confirmInputValue.value}
             placeholder={''}
@@ -93,7 +93,7 @@ async function confirmDel() {
               del()
             }}
           >
-            Confirm
+            {t('page_indexing_del_confirm_button')}
           </NButton>
         </div>
       )
@@ -125,7 +125,7 @@ async function del() {
   >
     <NInput
       v-model:value="url"
-      placeholder="Please Input URL"
+      :placeholder="t('page_indexing_input_placeholder')"
       :disabled="loading"
       size="large"
       autofocus
@@ -136,12 +136,12 @@ async function del() {
       </template>
     </NInput>
     <div flex mt-6 flex-justify-start w-full>
-      <NButton :disabled="disabled" secondary @click="update"
-        >update url indexing</NButton
-      >
-      <NButton ml-4 :disabled="disabled" secondary @click="get"
-        >get metadata</NButton
-      >
+      <NButton :disabled="disabled" secondary @click="update">{{
+        t('page_indexing_update_button')
+      }}</NButton>
+      <NButton ml-4 :disabled="disabled" secondary @click="get">{{
+        t('page_indexing_get_button')
+      }}</NButton>
       <span flex-1></span>
       <NButton
         quaternary

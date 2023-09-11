@@ -3,11 +3,14 @@ import { defineConfig, mergeConfig, type UserConfig } from 'vite'
 import vue from '@vitejs/plugin-vue'
 import vueJsx from '@vitejs/plugin-vue-jsx'
 import uno from 'unocss/vite'
+import VueI18nPlugin from '@intlify/unplugin-vue-i18n/vite'
 import { presetUno } from '@unocss/preset-uno'
 import presetAttributify from '@unocss/preset-attributify'
 import electron from 'vite-plugin-electron'
 import renderer from 'vite-plugin-electron-renderer'
 import pkg from './package.json'
+import path from 'node:path'
+import { fileURLToPath } from 'node:url'
 
 // https://vitejs.dev/config/
 export default defineConfig(({ command }) => {
@@ -23,6 +26,12 @@ export default defineConfig(({ command }) => {
       vueJsx(),
       uno({
         presets: [presetUno(), presetAttributify()]
+      }),
+      VueI18nPlugin({
+        include: path.resolve(
+          path.dirname(fileURLToPath(import.meta.url)),
+          './locales/**'
+        )
       })
     ]
   }

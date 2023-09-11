@@ -8,7 +8,7 @@ Build with `Electron`, simple Application for Google indexing-api usage.
 
 - [x] Mac release
 - [ ] Windows release
-- [ ] i18n
+- [x] i18n
 
 ### Screenshots
 

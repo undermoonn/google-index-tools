@@ -19,7 +19,7 @@ const getRoutes = (): RouteRecordRaw[] => [
     name: RN.PageAuth,
     component: () => import('./pages/PageAuth.vue'),
     meta: {
-      title: 'Auth'
+      titleI18nKey: 'nav_auth'
     }
   },
   {
@@ -27,7 +27,7 @@ const getRoutes = (): RouteRecordRaw[] => [
     name: RN.PageIndexing,
     component: () => import('./pages/PageIndexing.vue'),
     meta: {
-      title: 'Indexing'
+      titleI18nKey: 'nav_indexing'
     }
   }
 ]

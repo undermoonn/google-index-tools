@@ -1,5 +1,6 @@
 <script lang="ts" setup>
 import { ref } from 'vue'
+import { useI18n } from 'vue-i18n'
 import { RouterView, useRoute } from 'vue-router'
 import {
   NIcon,
@@ -9,6 +10,8 @@ import {
   NGlobalStyle,
   NBreadcrumbItem,
   NMessageProvider,
+  NSpace,
+  NDivider,
   darkTheme,
   lightTheme,
   type GlobalTheme,
@@ -16,11 +19,26 @@ import {
 } from 'naive-ui'
 import { LogoGoogle } from '@vicons/ionicons5'
 
+import GithubLink from './components/GithubLink.vue'
+import ThemeSwitcher, { type SetTheme } from './components/ThemeSwitcher.vue'
+import LanguageSelect from './components/LanguageSelect.vue'
 import HackSetMessage from './components/hack/HackSetMessage'
 
+const { t } = useI18n()
 const route = useRoute()
-
 const theme = ref<GlobalTheme>(darkTheme)
+
+const setTheme: SetTheme = type => {
+  if (type === 'dark') {
+    theme.value = darkTheme
+    return
+  }
+  if (type === 'light') {
+    theme.value = lightTheme
+    return
+  }
+  theme.value = darkTheme
+}
 
 const themeOverrides: GlobalThemeOverrides = {
   common: {
@@ -28,22 +46,6 @@ const themeOverrides: GlobalThemeOverrides = {
     primaryColorHover: 'rgb(87, 91, 199)'
   }
 }
-
-window
-  .matchMedia('(prefers-color-scheme: dark)')
-  .addEventListener('change', e => {
-    if (e.matches) {
-      theme.value = darkTheme
-    }
-  })
-
-window
-  .matchMedia('(prefers-color-scheme: light)')
-  .addEventListener('change', e => {
-    if (e.matches) {
-      theme.value = lightTheme
-    }
-  })
 </script>
 
 <template>
@@ -64,12 +66,18 @@ window
           <NIcon mr-3>
             <LogoGoogle />
           </NIcon>
-          Index Tools
+          {{ t('nav_root') }}
         </NBreadcrumbItem>
-        <NBreadcrumbItem v-if="route.meta.title" :clickable="false">
-          {{ route.meta.title }}
+        <NBreadcrumbItem v-if="route.meta.titleI18nKey" :clickable="false">
+          {{ t(route.meta.titleI18nKey as string) }}
         </NBreadcrumbItem>
       </NBreadcrumb>
+      <NSpace align="center" size="large">
+        <LanguageSelect />
+        <NDivider vertical />
+        <ThemeSwitcher :set-theme="setTheme" :theme="theme" />
+        <GithubLink />
+      </NSpace>
     </div>
     <NDialogProvider>
       <RouterView p-6 />

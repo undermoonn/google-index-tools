@@ -1,0 +1,12 @@
+{
+  "nav_root": "Index Tools",
+  "nav_auth": "Auth",
+  "nav_indexing": "Indexing",
+  "page_auth_load_file": "Load JSON Auth File",
+  "page_auth_button": "AUTHORIZE",
+  "page_indexing_input_placeholder": "Please Input URL",
+  "page_indexing_update_button": "update url indexing",
+  "page_indexing_get_button": "get metadata",
+  "page_indexing_del_confirm_title": "Please type {url} to Confirm.",
+  "page_indexing_del_confirm_button": "Confirm Delete Indexing"
+}

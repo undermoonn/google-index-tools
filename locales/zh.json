@@ -1,0 +1,12 @@
+{
+  "nav_root": "索引工具",
+  "nav_auth": "授权",
+  "nav_indexing": "推送",
+  "page_auth_load_file": "加载授权配置文件",
+  "page_auth_button": "授权",
+  "page_indexing_input_placeholder": "请输入链接",
+  "page_indexing_update_button": "更新索引",
+  "page_indexing_get_button": "获取推送状态",
+  "page_indexing_del_confirm_title": "请输入 {url} 来确认",
+  "page_indexing_del_confirm_button": "确认删除索引"
+}
