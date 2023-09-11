@@ -9,10 +9,14 @@ Build with `Electron`, simple Application for Google indexing-api usage.
 - [x] Mac
 - [ ] Windows
 
----
+### Screenshots
 
 ![pic](./md/00.png)
 
 ![pic](./md/01.png)
 
 ![pic](./md/02.png)
+
+### Apply `Privacy & Security` setting
+
+![pic](./md/PS_00.png)
