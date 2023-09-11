@@ -1,46 +1,79 @@
 <script lang="ts" setup>
+import { ref } from 'vue'
 import { RouterView, useRoute } from 'vue-router'
 import {
   NIcon,
   NBreadcrumb,
   NConfigProvider,
+  NDialogProvider,
+  NGlobalStyle,
   NBreadcrumbItem,
-  NMessageProvider
+  NMessageProvider,
+  darkTheme,
+  lightTheme,
+  type GlobalTheme,
+  type GlobalThemeOverrides
 } from 'naive-ui'
 import { LogoGoogle } from '@vicons/ionicons5'
-import hljs from 'highlight.js/lib/core'
-import json from 'highlight.js/lib/languages/json'
 
 import HackSetMessage from './components/hack/HackSetMessage'
 
-hljs.registerLanguage('json', json)
-
 const route = useRoute()
+
+const theme = ref<GlobalTheme>(darkTheme)
+
+const themeOverrides: GlobalThemeOverrides = {
+  common: {
+    primaryColor: 'rgb(87, 91, 199)',
+    primaryColorHover: 'rgb(87, 91, 199)'
+  }
+}
+
+window
+  .matchMedia('(prefers-color-scheme: dark)')
+  .addEventListener('change', e => {
+    if (e.matches) {
+      theme.value = darkTheme
+    }
+  })
+
+window
+  .matchMedia('(prefers-color-scheme: light)')
+  .addEventListener('change', e => {
+    if (e.matches) {
+      theme.value = lightTheme
+    }
+  })
 </script>
 
 <template>
-  <NConfigProvider h-full flex flex-col :hljs="hljs">
+  <NConfigProvider
+    :theme="theme"
+    :theme-overrides="themeOverrides"
+    h-full
+    flex
+    flex-col
+  >
+    <NGlobalStyle />
     <NMessageProvider>
       <HackSetMessage />
     </NMessageProvider>
     <div bordered p-6 flex flex-items-center flex-justify-between>
-      <NIcon size="120" absolute op-10 style="left: -36px; top: -22px">
-        <LogoGoogle />
-      </NIcon>
       <NBreadcrumb>
         <NBreadcrumbItem :clickable="false">
-          Google Index Tools
+          <NIcon mr-3>
+            <LogoGoogle />
+          </NIcon>
+          Index Tools
         </NBreadcrumbItem>
         <NBreadcrumbItem v-if="route.meta.title" :clickable="false">
           {{ route.meta.title }}
         </NBreadcrumbItem>
       </NBreadcrumb>
     </div>
-    <RouterView v-slot="{ Component }" p-6>
-      <Transition>
-        <component :is="Component" />
-      </Transition>
-    </RouterView>
+    <NDialogProvider>
+      <RouterView p-6 />
+    </NDialogProvider>
   </NConfigProvider>
 </template>
 
@@ -58,5 +91,9 @@ html,
 body,
 #app {
   height: 100%;
+}
+body {
+  /* background: #191a23;
+  color: rgb(210, 211, 224); */
 }
 </style>

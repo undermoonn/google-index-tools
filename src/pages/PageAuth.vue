@@ -1,7 +1,7 @@
 <script lang="ts" setup>
 import { ref } from 'vue'
 import { useRouter } from 'vue-router'
-import { DocumentOutline } from '@vicons/ionicons5'
+import { CodeSlashSharp } from '@vicons/ionicons5'
 import {
   NIcon,
   NForm,
@@ -105,10 +105,10 @@ function handleUploadChange(data: { fileList: UploadFileInfo[] }) {
         <NUploadDragger>
           <div mb-4>
             <NIcon size="48" :depth="3">
-              <DocumentOutline />
+              <CodeSlashSharp />
             </NIcon>
           </div>
-          <span>Upload JSON Auth File</span>
+          <span op-50>Load JSON Auth File</span>
         </NUploadDragger>
       </NUpload>
     </div>
@@ -120,7 +120,8 @@ function handleUploadChange(data: { fileList: UploadFileInfo[] }) {
       @click="auth"
       :loading="authLoading"
       strong
-      >authorize</NButton
+      type="primary"
+      >AUTHORIZE</NButton
     >
   </div>
 </template>

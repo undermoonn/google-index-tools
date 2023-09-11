@@ -1,15 +1,18 @@
 <script setup lang="tsx">
-import { NButton, NInput, NIcon, NSpin, NCode } from 'naive-ui'
+import { NButton, NInput, NIcon, NSpin, useDialog } from 'naive-ui'
 import { TrashBin, Link } from '@vicons/ionicons5'
 import {
   getMetadata,
   postDeleteIndexing,
   postUpdateIndexing
 } from '../api/indexing'
-import { FunctionalComponent, computed, ref } from 'vue'
+import { computed, ref } from 'vue'
 import { useAuthStore } from '../store/auth'
 import { message } from '../message'
+import VueJsonPretty from 'vue-json-pretty'
+import 'vue-json-pretty/lib/styles.css'
 
+const dialog = useDialog()
 const loading = ref(false)
 const authStore = useAuthStore()
 const url = ref('')
@@ -24,7 +27,7 @@ function respMessage(res: unknown) {
           class={'overflow-scroll'}
           style={'max-width: 80vw; max-height: 80vh'}
         >
-          <NCode code={JSON.stringify(res, null, 2)} language="json" wordWrap />
+          <VueJsonPretty data={res as any} />
         </div>
       )
     },
@@ -59,6 +62,45 @@ async function update() {
   loading.value = false
 }
 
+async function confirmDel() {
+  const confirmInputValue = ref('')
+  const d = dialog.create({
+    showIcon: false,
+    content() {
+      return (
+        <div>
+          <div>
+            Please type
+            <span class={'font-mono py-1 px-2 mx-2 rounded bg-black bg-op-10'}>
+              {url.value}
+            </span>
+            to confirm.
+          </div>
+          <NInput
+            value={confirmInputValue.value}
+            placeholder={''}
+            onUpdate:value={e => {
+              confirmInputValue.value = e
+            }}
+            class={'my-4'}
+          ></NInput>
+          <NButton
+            disabled={confirmInputValue.value !== url.value}
+            secondary
+            class={'w-full'}
+            onClick={() => {
+              d.destroy()
+              del()
+            }}
+          >
+            Confirm
+          </NButton>
+        </div>
+      )
+    }
+  })
+}
+
 async function del() {
   loading.value = true
   try {
@@ -85,6 +127,8 @@ async function del() {
       v-model:value="url"
       placeholder="Please Input URL"
       :disabled="loading"
+      size="large"
+      autofocus
     >
       <template #prefix>
         <NSpin mr-1 v-if="loading" :size="18" stroke="#eee" />
@@ -99,7 +143,13 @@ async function del() {
         >get metadata</NButton
       >
       <span flex-1></span>
-      <NButton quaternary :disabled="disabled" type="error" round @click="del">
+      <NButton
+        quaternary
+        :disabled="disabled"
+        type="error"
+        round
+        @click="confirmDel"
+      >
         <NIcon><TrashBin /></NIcon>
       </NButton>
     </div>

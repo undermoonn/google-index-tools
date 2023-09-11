@@ -14,3 +14,5 @@ Build with `Electron`, simple Application for Google indexing-api usage.
 ![pic](./md/00.png)
 
 ![pic](./md/01.png)
+
+![pic](./md/02.png)
