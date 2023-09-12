@@ -15,6 +15,7 @@ import { useI18n } from 'vue-i18n'
 import { RouterView, useRoute } from 'vue-router'
 
 import GithubLink from './components/GithubLink.vue'
+import AppVersion from './components/AppVersion.vue'
 import ThemeSwitcher from './components/ThemeSwitcher.vue'
 import LanguageSelect from './components/LanguageSelect.vue'
 import HackSetMessage from './components/hack/HackSetMessage'
@@ -37,6 +38,7 @@ const { setTheme, theme, themeOverrides } = useNaiveUiTheme()
     <NMessageProvider>
       <HackSetMessage />
     </NMessageProvider>
+    <AppVersion />
     <div bordered p-6 flex flex-items-center flex-justify-between>
       <NBreadcrumb>
         <NBreadcrumbItem :clickable="false">
