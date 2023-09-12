@@ -67,6 +67,13 @@ export const useAuthStore = defineStore('auth', () => {
     })
   }
 
+  function authReset() {
+    authStatus.value = AuthStatus.Init
+    authAccessToken.value = ''
+    authConfig.value.clientEmail = ''
+    authConfig.value.privateKey = ''
+  }
+
   function authSuccess() {
     authStatus.value = AuthStatus.Success
   }
@@ -79,6 +86,7 @@ export const useAuthStore = defineStore('auth', () => {
     authAccessToken,
 
     auth,
+    authReset,
     authSuccess
   }
 })

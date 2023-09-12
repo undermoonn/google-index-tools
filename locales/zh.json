@@ -8,5 +8,6 @@
   "page_indexing_update_button": "更新索引",
   "page_indexing_get_button": "获取推送状态",
   "page_indexing_del_confirm_title": "请输入 {url} 来确认",
-  "page_indexing_del_confirm_button": "确认删除索引"
+  "page_indexing_del_confirm_button": "确认删除索引",
+  "reset_auth": "重置应用授权状态"
 }

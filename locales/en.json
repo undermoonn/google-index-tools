@@ -8,5 +8,6 @@
   "page_indexing_update_button": "update url indexing",
   "page_indexing_get_button": "get metadata",
   "page_indexing_del_confirm_title": "Please type {url} to Confirm.",
-  "page_indexing_del_confirm_button": "Confirm Delete Indexing"
+  "page_indexing_del_confirm_button": "Confirm Delete Indexing",
+  "reset_auth": "Reset Auth"
 }

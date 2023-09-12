@@ -14,6 +14,7 @@ import {
 import { useI18n } from 'vue-i18n'
 import { RouterView, useRoute } from 'vue-router'
 
+import ResetAuth from './components/ResetAuth.vue'
 import GithubLink from './components/GithubLink.vue'
 import AppVersion from './components/AppVersion.vue'
 import ThemeSwitcher from './components/ThemeSwitcher.vue'
@@ -51,11 +52,12 @@ const { setTheme, theme, themeOverrides } = useNaiveUiTheme()
           {{ t(route.meta.titleI18nKey as string) }}
         </NBreadcrumbItem>
       </NBreadcrumb>
-      <NSpace align="center" size="large">
+      <NSpace align="center" :size="20">
         <LanguageSelect />
         <NDivider vertical />
         <ThemeSwitcher :set-theme="setTheme" :theme="theme" />
         <GithubLink />
+        <ResetAuth />
       </NSpace>
     </div>
     <NDialogProvider>
