@@ -1,9 +1,10 @@
 <script lang="ts" setup>
-import { NSwitch, NIcon, type GlobalTheme } from 'naive-ui'
-import { DarkModeOutlined, LightModeOutlined } from '@vicons/material'
 import { useDark } from '@vueuse/core'
 import { CSSProperties, computed } from 'vue'
-export type SetTheme = (type: 'dark' | 'light' | 'system') => void
+import { NSwitch, NIcon, type GlobalTheme } from 'naive-ui'
+import { DarkModeOutlined, LightModeOutlined } from '@vicons/material'
+
+import { type SetTheme } from '../composables/useNaiveUiTheme'
 
 const props = defineProps<{
   setTheme: SetTheme
@@ -52,3 +53,4 @@ const themeBodyColor = computed(() => {
   background-color: v-bind(themeBodyColor) !important;
 }
 </style>
+../composables/useNaiveUiTheme

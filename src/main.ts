@@ -1,11 +1,12 @@
 import { createApp } from 'vue'
 import { createPinia } from 'pinia'
+// eslint-disable-next-line import/no-unresolved
+import 'virtual:uno.css'
+
+import './samples/nodeApi'
 import { createI18n } from './i18n'
 import { createRouter } from './router'
-
 import Application from './Application.vue'
-import './samples/node-api'
-import 'virtual:uno.css'
 
 createApp(Application)
   .use(createPinia())

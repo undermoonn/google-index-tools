@@ -1,51 +1,28 @@
 <script lang="ts" setup>
-import { ref } from 'vue'
-import { useI18n } from 'vue-i18n'
-import { RouterView, useRoute } from 'vue-router'
+import { LogoGoogle } from '@vicons/ionicons5'
 import {
   NIcon,
-  NBreadcrumb,
-  NConfigProvider,
-  NDialogProvider,
-  NGlobalStyle,
-  NBreadcrumbItem,
-  NMessageProvider,
   NSpace,
   NDivider,
-  darkTheme,
-  lightTheme,
-  type GlobalTheme,
-  type GlobalThemeOverrides
+  NBreadcrumb,
+  NGlobalStyle,
+  NConfigProvider,
+  NDialogProvider,
+  NBreadcrumbItem,
+  NMessageProvider
 } from 'naive-ui'
-import { LogoGoogle } from '@vicons/ionicons5'
+import { useI18n } from 'vue-i18n'
+import { RouterView, useRoute } from 'vue-router'
 
 import GithubLink from './components/GithubLink.vue'
-import ThemeSwitcher, { type SetTheme } from './components/ThemeSwitcher.vue'
+import ThemeSwitcher from './components/ThemeSwitcher.vue'
 import LanguageSelect from './components/LanguageSelect.vue'
 import HackSetMessage from './components/hack/HackSetMessage'
+import { useNaiveUiTheme } from './composables/useNaiveUiTheme'
 
 const { t } = useI18n()
 const route = useRoute()
-const theme = ref<GlobalTheme>(darkTheme)
-
-const setTheme: SetTheme = type => {
-  if (type === 'dark') {
-    theme.value = darkTheme
-    return
-  }
-  if (type === 'light') {
-    theme.value = lightTheme
-    return
-  }
-  theme.value = darkTheme
-}
-
-const themeOverrides: GlobalThemeOverrides = {
-  common: {
-    primaryColor: 'rgb(87, 91, 199)',
-    primaryColorHover: 'rgb(87, 91, 199)'
-  }
-}
+const { setTheme, theme, themeOverrides } = useNaiveUiTheme()
 </script>
 
 <template>
@@ -99,9 +76,5 @@ html,
 body,
 #app {
   height: 100%;
-}
-body {
-  /* background: #191a23;
-  color: rgb(210, 211, 224); */
 }
 </style>

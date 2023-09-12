@@ -6,7 +6,7 @@ import { computed, ref, ToRefs, watchEffect } from 'vue'
 
 import { Log } from '../log'
 
-export enum AuthStatus {
+enum AuthStatus {
   Processing,
   Success,
   Failed,
@@ -40,7 +40,7 @@ export const useAuthStore = defineStore('auth', () => {
   })
 
   async function auth() {
-    if (!authConfigIegal) {
+    if (!authConfigIegal.value) {
       // handle on button disabeld attr
       return
     }
@@ -67,12 +67,18 @@ export const useAuthStore = defineStore('auth', () => {
     })
   }
 
+  function authSuccess() {
+    authStatus.value = AuthStatus.Success
+  }
+
   return {
-    auth,
     authStatus,
     authrized,
     authConfig,
     authConfigIegal,
-    authAccessToken
+    authAccessToken,
+
+    auth,
+    authSuccess
   }
 })

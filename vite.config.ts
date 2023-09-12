@@ -1,16 +1,19 @@
+import path from 'node:path'
 import { rmSync } from 'node:fs'
+import { fileURLToPath } from 'node:url'
+
 import { defineConfig, mergeConfig, type UserConfig } from 'vite'
-import vue from '@vitejs/plugin-vue'
-import vueJsx from '@vitejs/plugin-vue-jsx'
-import uno from 'unocss/vite'
-import VueI18nPlugin from '@intlify/unplugin-vue-i18n/vite'
+import VitePluginUnoCss from 'unocss/vite'
+import VitePluginVue from '@vitejs/plugin-vue'
+import VitePluginEslint from 'vite-plugin-eslint'
+import VitePluginVueJsx from '@vitejs/plugin-vue-jsx'
+import VitePluginElectron from 'vite-plugin-electron'
+import VitePluginVueI18n from '@intlify/unplugin-vue-i18n/vite'
+import VitePluginElectronRenderer from 'vite-plugin-electron-renderer'
 import { presetUno } from '@unocss/preset-uno'
 import presetAttributify from '@unocss/preset-attributify'
-import electron from 'vite-plugin-electron'
-import renderer from 'vite-plugin-electron-renderer'
+
 import pkg from './package.json'
-import path from 'node:path'
-import { fileURLToPath } from 'node:url'
 
 // https://vitejs.dev/config/
 export default defineConfig(({ command }) => {
@@ -22,12 +25,16 @@ export default defineConfig(({ command }) => {
 
   const defaultViteConfig: UserConfig = {
     plugins: [
-      vue(),
-      vueJsx(),
-      uno({
+      VitePluginEslint({
+        useEslintrc: true,
+        fix: isServe
+      }),
+      VitePluginVue(),
+      VitePluginVueJsx(),
+      VitePluginUnoCss({
         presets: [presetUno(), presetAttributify()]
       }),
-      VueI18nPlugin({
+      VitePluginVueI18n({
         include: path.resolve(
           path.dirname(fileURLToPath(import.meta.url)),
           './locales/**'
@@ -38,7 +45,7 @@ export default defineConfig(({ command }) => {
 
   const config: UserConfig = {
     plugins: [
-      electron([
+      VitePluginElectron([
         {
           // Main-Process entry file of the Electron App.
           entry: 'electron/main/index.ts',
@@ -86,7 +93,7 @@ export default defineConfig(({ command }) => {
         }
       ]),
       // Use Node.js API in the Renderer-process
-      renderer()
+      VitePluginElectronRenderer()
     ],
     server:
       process.env.VSCODE_DEBUG &&

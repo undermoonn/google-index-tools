@@ -1,8 +1,4 @@
 <script lang="ts" setup>
-import { ref } from 'vue'
-import { useI18n } from 'vue-i18n'
-import { useRouter } from 'vue-router'
-import { CodeSlashSharp } from '@vicons/ionicons5'
 import {
   NIcon,
   NForm,
@@ -15,63 +11,51 @@ import {
   NUploadDragger,
   type UploadFileInfo
 } from 'naive-ui'
+import { useI18n } from 'vue-i18n'
+import { useRouter } from 'vue-router'
+import { CodeSlashSharp } from '@vicons/ionicons5'
 
 import { RN } from '../router'
-import { useAuthStore, AuthStatus } from '../store/auth'
-import { message } from '../message'
+import { useAuthStore } from '../store/auth'
+import { readFileAsJsonObject } from '../utils/file'
+import { usePromise } from '../composables/usePromise'
 
 const { t } = useI18n()
 const router = useRouter()
 const authStore = useAuthStore()
-const authLoading = ref(false)
+const { loading, send } = usePromise(authStore.auth)
 
 checkAuth()
 
 function checkAuth() {
-  authLoading.value = true
+  loading.value = true
   if (authStore.authAccessToken) {
-    authStore.authStatus = AuthStatus.Success
+    authStore.authSuccess()
     router.push({ name: RN.PageIndexing })
-    return true
-  }
-  authLoading.value = false
-  return false
-}
-
-async function auth() {
-  authLoading.value = true
-  try {
-    await authStore.auth()
-    checkAuth()
-  } catch (_) {
-    authLoading.value = false
-  }
-}
-
-function handleUploadChange(data: { fileList: UploadFileInfo[] }) {
-  const fileInfo = data.fileList[0]
-  if (!fileInfo.file) {
     return
   }
-  const render = new FileReader()
-  render.readAsText(fileInfo.file, 'utf-8')
-  render.onload = e => {
-    try {
-      const config = JSON.parse(e.target?.result as string) as {
-        client_email: string
-        private_key: string
-      }
-      authStore.authConfig.clientEmail = config.client_email
-      authStore.authConfig.privateKey = config.private_key
-    } catch (_) {
-      message.error('illegal JSON')
-    }
+  loading.value = false
+}
+
+async function handleUploadChange(data: { fileList: UploadFileInfo[] }) {
+  if (!data.fileList?.[0]?.file) {
+    return
+  }
+
+  const result = await readFileAsJsonObject<{
+    client_email: string
+    private_key: string
+  }>(data.fileList[0].file)
+
+  if (result) {
+    authStore.authConfig.clientEmail = result.client_email
+    authStore.authConfig.privateKey = result.private_key
   }
 }
 </script>
 
 <template>
-  <NSpin v-if="authLoading" flex-1 stroke="#ddd" />
+  <NSpin v-if="loading" flex-1 stroke="#ddd" />
   <div
     v-else
     class="page-auth"
@@ -119,10 +103,10 @@ function handleUploadChange(data: { fileList: UploadFileInfo[] }) {
       :disabled="!authStore.authConfigIegal"
       secondary
       mt-6
-      @click="auth"
-      :loading="authLoading"
+      :loading="loading"
       strong
       type="primary"
+      @click="send().then(checkAuth)"
       >{{ t('page_auth_button') }}</NButton
     >
   </div>

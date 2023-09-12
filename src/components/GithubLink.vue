@@ -8,7 +8,7 @@ function toGithub() {
 </script>
 
 <template>
-  <NButton text @click="toGithub" block>
+  <NButton text block @click="toGithub">
     <NIcon size="22"><LogoGithub /></NIcon>
   </NButton>
 </template>

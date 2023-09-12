@@ -1,115 +1,45 @@
 <script setup lang="tsx">
-import { NButton, NInput, NIcon, NSpin, useDialog } from 'naive-ui'
-import { TrashBin, Link } from '@vicons/ionicons5'
-import {
-  getMetadata,
-  postDeleteIndexing,
-  postUpdateIndexing
-} from '../api/indexing'
-import { computed, ref } from 'vue'
 import { useI18n } from 'vue-i18n'
-import { useAuthStore } from '../store/auth'
+import { computed, ref } from 'vue'
+import { TrashBin, Link } from '@vicons/ionicons5'
+import { NButton, NInput, NIcon, NSpin } from 'naive-ui'
+
 import { message } from '../message'
-import VueJsonPretty from 'vue-json-pretty'
-import 'vue-json-pretty/lib/styles.css'
+import { useAuthStore } from '../store/auth'
+import { ApiIndexing } from '../api/indexing'
+import { usePromise } from '../composables/usePromise'
+import { useFriendlyPrompt } from '../composables/useFriendlyPrompt'
 
 const { t } = useI18n()
-const dialog = useDialog()
-const loading = ref(false)
 const authStore = useAuthStore()
+const { friendlyPrompt } = useFriendlyPrompt()
+
 const url = ref('')
-const legal = computed(() => /https:\/\//.test(url.value))
-const disabled = computed(() => !legal.value || loading.value)
+const token = computed(() => authStore.authAccessToken)
+const isUrlLegal = computed(() => /https:\/\//.test(url.value))
 
-function respMessage(res: unknown) {
-  message.info(
-    () => {
-      return (
-        <div
-          class={'overflow-scroll'}
-          style={'max-width: 80vw; max-height: 80vh'}
-        >
-          <VueJsonPretty data={res as any} />
-        </div>
-      )
-    },
-    {
-      keepAliveOnHover: true,
-      duration: 10000,
-      closable: true,
-      icon: () => {}
-    }
+const GetUrl = usePromise(ApiIndexing.get)
+const UpdateUrl = usePromise(ApiIndexing.update)
+const DeleteUrl = usePromise(ApiIndexing.delete)
+const loading = computed(() => {
+  return (
+    GetUrl.loading.value || DeleteUrl.loading.value || UpdateUrl.loading.value
   )
-}
-
-async function get() {
-  loading.value = true
-  try {
-    const res = await getMetadata(url.value, {
-      token: authStore.authAccessToken
-    })
-    respMessage(res)
-  } catch (e) {}
-  loading.value = false
-}
-
-async function update() {
-  loading.value = true
-  try {
-    const res = await postUpdateIndexing(url.value, {
-      token: authStore.authAccessToken
-    })
-    respMessage(res)
-  } catch (e) {}
-  loading.value = false
-}
+})
+const disabled = computed(() => !isUrlLegal.value || loading.value)
 
 async function confirmDel() {
-  const confirmInputValue = ref('')
-  const d = dialog.create({
-    showIcon: false,
-    content() {
-      return (
-        <div>
-          <div
-            innerHTML={t('page_indexing_del_confirm_title', {
-              url: `<span class="font-mono py-1 px-2 mx-2 rounded bg-black bg-op-10">${url.value}</span>`
-            })}
-          />
-          <NInput
-            value={confirmInputValue.value}
-            placeholder={''}
-            onUpdate:value={e => {
-              confirmInputValue.value = e
-            }}
-            class={'my-4'}
-          ></NInput>
-          <NButton
-            disabled={confirmInputValue.value !== url.value}
-            secondary
-            class={'w-full'}
-            onClick={() => {
-              d.destroy()
-              del()
-            }}
-          >
-            {t('page_indexing_del_confirm_button')}
-          </NButton>
-        </div>
-      )
+  await friendlyPrompt(
+    t('page_indexing_del_confirm_title', {
+      url: `<span class="font-mono py-1 px-2 mx-2 rounded bg-black bg-op-10">${url.value}</span>`
+    }),
+    {
+      buttonText: t('page_indexing_del_confirm_button'),
+      expected: url
     }
-  })
-}
+  )
 
-async function del() {
-  loading.value = true
-  try {
-    const res = await postDeleteIndexing(url.value, {
-      token: authStore.authAccessToken
-    })
-    respMessage(res)
-  } catch (e) {}
-  loading.value = false
+  DeleteUrl.send(url.value, { token: token.value }).then(message.json)
 }
 </script>
 
@@ -131,18 +61,25 @@ async function del() {
       autofocus
     >
       <template #prefix>
-        <NSpin mr-1 v-if="loading" :size="18" stroke="#eee" />
-        <NIcon mr-1 v-else :size="18"><Link /></NIcon>
+        <NSpin v-if="loading" mr-1 :size="18" stroke="#eee" />
+        <NIcon v-else mr-1 :size="18"><Link /></NIcon>
       </template>
     </NInput>
     <div flex mt-6 flex-justify-start w-full>
-      <NButton :disabled="disabled" secondary @click="update">{{
-        t('page_indexing_update_button')
-      }}</NButton>
-      <NButton ml-4 :disabled="disabled" secondary @click="get">{{
-        t('page_indexing_get_button')
-      }}</NButton>
-      <span flex-1></span>
+      <NButton
+        :disabled="disabled"
+        secondary
+        @click="UpdateUrl.send(url, { token }).then(message.json)"
+        >{{ t('page_indexing_update_button') }}</NButton
+      >
+      <NButton
+        ml-4
+        :disabled="disabled"
+        secondary
+        @click="GetUrl.send(url, { token }).then(message.json)"
+        >{{ t('page_indexing_get_button') }}</NButton
+      >
+      <span flex-1 />
       <NButton
         quaternary
         :disabled="disabled"

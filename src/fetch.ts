@@ -1,4 +1,5 @@
 import { ofetch, FetchOptions } from 'ofetch'
+
 import { Log } from './log'
 
 type Ofetch = typeof ofetch
