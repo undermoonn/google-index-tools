@@ -10,13 +10,19 @@ import { getLocal } from '../i18n'
 const i18n = useI18n()
 const locale = useLocalStorage<I18nLocale>('__vue_i18n_locale__', '')
 
-watch(locale, val => {
-  if (val) {
-    i18n.locale.value = val
-  } else {
-    locale.value = getLocal({ navigatorLanguage: navigator.language })
+watch(
+  locale,
+  val => {
+    if (val) {
+      i18n.locale.value = val
+    } else {
+      locale.value = getLocal({ navigatorLanguage: navigator.language })
+    }
+  },
+  {
+    immediate: true
   }
-})
+)
 </script>
 
 <template>
