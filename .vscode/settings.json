@@ -12,5 +12,16 @@
   "[vue]": {
     "editor.defaultFormatter": "esbenp.prettier-vscode"
   },
-  "editor.formatOnSave": true
+  "editor.formatOnSave": true,
+  "i18n-ally.enabledFrameworks": ["vue", "vue-sfc"],
+  "i18n-ally.ignoreFiles": [
+    "**/node_modules/**",
+    "**/dist/**",
+    "**/release/**"
+  ],
+  "i18n-ally.dirStructure": "file",
+  "i18n-ally.enabledParsers": ["json"],
+  "i18n-ally.sourceLanguage": "en",
+  "i18n-ally.localesPaths": ["locales"],
+  "i18n-ally.keystyle": "nested"
 }
