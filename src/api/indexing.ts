@@ -1,4 +1,4 @@
-import { GET, POST } from '../fetch'
+import { GET, POST } from '../adapter'
 import { Defaults } from '../defaults'
 
 export const ApiIndexing = {

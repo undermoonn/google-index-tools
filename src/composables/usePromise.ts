@@ -1,7 +1,5 @@
 import { ref } from 'vue'
 
-import { Log } from '../log'
-
 export function usePromise<T>(
   fn: T extends (...args: any[]) => PromiseLike<unknown> ? T : never
 ) {
@@ -12,7 +10,8 @@ export function usePromise<T>(
     try {
       data.value = (await fn(...args)) as any
     } catch (e) {
-      Log.error(e)
+      loading.value = false
+      throw e
     }
     loading.value = false
     return data

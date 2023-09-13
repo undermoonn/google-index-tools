@@ -4,7 +4,7 @@ import { computed, ref } from 'vue'
 import { TrashBin, Link } from '@vicons/ionicons5'
 import { NButton, NInput, NIcon, NSpin } from 'naive-ui'
 
-import { message } from '../message'
+import { Message } from '../adapter'
 import { useAuthStore } from '../store/auth'
 import { ApiIndexing } from '../api/indexing'
 import { usePromise } from '../composables/usePromise'
@@ -39,7 +39,9 @@ async function confirmDel() {
     }
   )
 
-  DeleteUrl.send(url.value, { token: token.value }).then(message.json)
+  DeleteUrl.send(url.value, { token: token.value }).then(res =>
+    Message.json(res, 'success')
+  )
 }
 </script>
 
@@ -69,14 +71,20 @@ async function confirmDel() {
       <NButton
         :disabled="disabled"
         secondary
-        @click="UpdateUrl.send(url, { token }).then(message.json)"
+        @click="
+          UpdateUrl.send(url, { token }).then(res =>
+            Message.json(res, 'success')
+          )
+        "
         >{{ t('page_indexing_update_button') }}</NButton
       >
       <NButton
         ml-4
         :disabled="disabled"
         secondary
-        @click="GetUrl.send(url, { token }).then(message.json)"
+        @click="
+          GetUrl.send(url, { token }).then(res => Message.json(res, 'success'))
+        "
         >{{ t('page_indexing_get_button') }}</NButton
       >
       <span flex-1 />

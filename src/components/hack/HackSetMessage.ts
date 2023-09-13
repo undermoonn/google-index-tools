@@ -1,10 +1,10 @@
 import { useMessage } from 'naive-ui'
 import { FunctionalComponent } from 'vue'
 
-import { setMessage } from '../../message'
+import { Message } from '../../adapter'
 
 const HackSetMessage: FunctionalComponent = () => {
-  setMessage(useMessage())
+  Message.setInstance(useMessage())
 }
 
 export default HackSetMessage

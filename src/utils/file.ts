@@ -1,4 +1,4 @@
-import { Log } from '../log'
+import { Log } from '../adapter'
 
 export async function readFileAsText(
   file: MaybeUndefined<File>
@@ -16,7 +16,7 @@ export async function readFileAsText(
     })
   } catch (e) {
     Log.info(file)
-    Log.error('readFileAsText failed')
+    Log.error('read file failed')
   }
   return ''
 }

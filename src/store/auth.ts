@@ -4,7 +4,7 @@ import { object, string } from 'yup'
 import { useLocalStorage } from '@vueuse/core'
 import { computed, ref, ToRefs, watchEffect } from 'vue'
 
-import { Log } from '../log'
+import { Log } from '../adapter'
 
 enum AuthStatus {
   Processing,
