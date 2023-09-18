@@ -16,10 +16,7 @@ enum AuthStatus {
 export const useAuthStore = defineStore('auth', () => {
   const authStatus = ref<AuthStatus>(AuthStatus.Init)
   const authrized = computed(() => authStatus.value === AuthStatus.Success)
-  const authAccessToken = useLocalStorage<AuthAccessToken>(
-    '__store_auth_access_token',
-    ''
-  )
+  const authAccessToken = ref('')
   const authConfig = ref<ToRefs<AuthConfig>>({
     clientEmail: useLocalStorage('__store_auth_client_email', ''),
     privateKey: useLocalStorage('__store_auth_private_key', '')
@@ -70,8 +67,6 @@ export const useAuthStore = defineStore('auth', () => {
   function authReset() {
     authStatus.value = AuthStatus.Init
     authAccessToken.value = ''
-    authConfig.value.clientEmail = ''
-    authConfig.value.privateKey = ''
   }
 
   function authSuccess() {
