@@ -53,4 +53,3 @@ const themeBodyColor = computed(() => {
   background-color: v-bind(themeBodyColor) !important;
 }
 </style>
-../composables/useNaiveUiTheme
